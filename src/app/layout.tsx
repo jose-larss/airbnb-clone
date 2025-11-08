@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/modules/home/components/navbar";
+import { RegisterModal } from "@/modules/home/components/modals/register-modal";
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -19,6 +21,8 @@ export default function RootLayout({children,}: Readonly<{
     <html lang="en">
       <body className={inter.className}>
 
+        <Toaster />
+        <RegisterModal />
         <Navbar />
 
         <div className="pt-24">
