@@ -1,0 +1,14 @@
+asgiref==3.10.0
+Django==5.2.8
+django-cors-headers==4.9.0
+django-rest-auth==0.9.5
+djangorestframework==3.16.1
+djangorestframework_simplejwt==5.5.1
+environs==14.5.0
+marshmallow==4.1.0
+psycopg2-binary==2.9.11
+PyJWT==2.10.1
+python-dotenv==1.2.1
+six==1.17.0
+sqlparse==0.5.3
+tzdata==2025.2
