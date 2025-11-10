@@ -17,28 +17,37 @@ export const RegisterModal = () => {
     const [isLoading, setIsLoading] = useState(false)
 
     const {register, handleSubmit, formState: {errors,}} = useForm<FieldValues>({defaultValues: {
-        name: "",
+        username: "",
         email: "",
         password: "",
     }})
 
-    const fetchRegister = async () => {
+    const fetchRegister = async (data: FieldValues) => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/library/`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/register/`, {
                 method: 'POST',
-                credentials: 'include', // 👈 Esto es lo importante
                 headers: {
                     'Content-Type': 'application/json',
                 },
+                body: JSON.stringify(data),                
             });
             if (!response.ok) {
                 // Manejo de errores si el backend devuelve un estado no exitoso
                 const errorData = await response.json();
                 console.error('Error en el backend:', errorData);
+                // Extrae los mensajes de error en un array
+                const messages = Object.values(errorData)
+                    .flat() // por si hay arrays dentro (como ["Enter a valid email address."])
+                    .join("\n");  // cada mensaje en una línea
+
+                toast.error(messages || "Error desconocido en el servidor", 
+                    {style: { whiteSpace: "pre-line" } // importante para que respete los \n}
+                });
                 return;
             }
             // Si la respuesta es exitosa
             registerModal.onClose()
+            toast.success('Registro de usuario realizado correctamente')
             return response.json();
             
         } catch (error) {
@@ -50,12 +59,11 @@ export const RegisterModal = () => {
         }
     }
     
-
-    const onSubmit: SubmitHandler<FieldValues> = (data) => {
+    const onSubmit = async (data: FieldValues) => {
         setIsLoading(true)
-        console.log(data)
+  
         //llamada a api de registro
-        fetchRegister()
+        fetchRegister(data)
     }
 
     const bodyContent = (
@@ -73,7 +81,7 @@ export const RegisterModal = () => {
                 required
             />
             <Input 
-                id="name"
+                id="username"
                 label="Name"
                 disabled={isLoading}
                 register={register}
