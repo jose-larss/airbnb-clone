@@ -7,34 +7,37 @@ import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 
 import useRegisterModal from "../../hooks/useRegisterModal";
 import useLoginModal from "../../hooks/useLoginModal";
+import { handlelogin } from "@/lib/actions";
 import { Modal } from "./modal";
 import { Heading } from "../heading";
 import { Input } from "../inputs/Input";
 import toast from "react-hot-toast";
 import { Button } from "../button";
+import { useRouter } from "next/navigation";
 
 
-export const RegisterModal = () => {
+export const LoginModal = () => {
     const registerModal = useRegisterModal() // hook de registro
-    const loginMOdal = useLoginModal()
+    const loginModal = useLoginModal()
 
     const [isLoading, setIsLoading] = useState(false)
+    const router = useRouter()
 
     const {register, handleSubmit, formState: {errors,}} = useForm<FieldValues>({defaultValues: {
-        username: "",
         email: "",
         password: "",
     }})
 
-    const fetchRegister = async (data: FieldValues) => {
+    const fetchLogin = async (data: FieldValues) => {
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/register/`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/login/`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(data),                
             });
+            
             if (!response.ok) {
                 // Manejo de errores si el backend devuelve un estado no exitoso
                 const errorData = await response.json();
@@ -49,10 +52,16 @@ export const RegisterModal = () => {
                 });
                 return;
             }
+            const dataBack = await response.json();
+            console.log("dataBack es", dataBack)
             // Si la respuesta es exitosa
-            registerModal.onClose()
-            toast.success('Registro de usuario realizado correctamente')
-            return response.json();
+            loginModal.onClose()
+            toast.success('Login realizado correctamente')
+            
+            //se setean las cookies
+            handlelogin(dataBack.access, dataBack.refresh)
+            router.refresh()
+            //return response.json();
             
         } catch (error) {
             // Manejo de errores de red o conexión
@@ -67,26 +76,18 @@ export const RegisterModal = () => {
         setIsLoading(true)
   
         //llamada a api de registro
-        fetchRegister(data)
+        fetchLogin(data)
     }
 
     const bodyContent = (
         <div className="flex flex-col gap-4">
             <Heading
-                title="Welcome to AirBnb"
-                subtitle="Create an Account!"
+                title="Welcome back"
+                subtitle="Login to your account!"
             />
             <Input 
                 id="email"
                 label="Email"
-                disabled={isLoading}
-                register={register}
-                errors={errors}
-                required
-            />
-            <Input 
-                id="username"
-                label="Name"
                 disabled={isLoading}
                 register={register}
                 errors={errors}
@@ -122,13 +123,13 @@ export const RegisterModal = () => {
             <div className="text-neutral-500 items-center mt-4 font-light">
                 <div className="justify-center flex flex-row items-center gap-2">
                     <div >
-                        Already have an account?.
+                        Already do not have an account?.
                     </div>
 
                     <div
-                        onClick={registerModal.onClose} 
+                        onClick={registerModal.onOpen} 
                         className="text-neutral-800 cursor-pointer hover:underline">
-                        Log in.
+                        Register.
                     </div>
                 </div>
             </div>
@@ -138,10 +139,10 @@ export const RegisterModal = () => {
     return (
         <Modal 
             disabled={isLoading}
-            isOpen={registerModal.isOpen}
-            title="Register"
+            isOpen={loginModal.isOpen}
+            title="Login"
             actionLabel="Continue"
-            onClose={registerModal.onClose}
+            onClose={loginModal.onClose}
             onSubmit={handleSubmit(onSubmit)}
             body={bodyContent}
             footer={footerContent}
