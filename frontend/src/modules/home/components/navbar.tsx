@@ -3,7 +3,12 @@ import { Logo } from "./navbar/logo"
 import { Search } from "./navbar/search"
 import { UserMenu } from "./navbar/user-menu"
 
-export const Navbar = () => {
+interface NavbarProps {
+    currentUser?: any | null
+}
+
+export const Navbar = ({currentUser}: NavbarProps) => {
+    
     return(
         <nav className="w-full fixed bg-white z-10 shadow-sm">
             <div className="p-4 border-b">
@@ -11,7 +16,7 @@ export const Navbar = () => {
                     <div className="flex flex-row items-center justify-between gap-3 md:gap-0">
                         <Logo />
                         <Search />
-                        <UserMenu />
+                        <UserMenu currentUser={currentUser} />
                     </div>
                 </Container>
             </div>
