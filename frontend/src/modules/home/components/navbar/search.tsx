@@ -8,16 +8,16 @@ export const Search = () => {
                         hover:shadow-md transition cursor-pointer">
             <div className="flex flex-row items-center justify-between">
                 <div className="text-sm font-semibold px-6">
-                    Anywhere
+                    Cualquier lugar
                 </div>
 
                 <div className="hidden sm:block text-sm font-semibold px-6 border-x flex-1 text-center">
-                    Any Week
+                    Cualquier semana
                 </div>
 
                 <div className="text-sm pl-6 pr-2 text-gray-600 flex flex-row items-center gap-3">
                     <div className="hidden sm:block">
-                        Add Guests
+                        Agregar invitado
                     </div>
                     <div className="p-2 bg-rose-500 rounded-full text-white">
                         <BiSearch size={20}/>
