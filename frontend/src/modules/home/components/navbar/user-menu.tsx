@@ -1,13 +1,14 @@
 "use client"
 
 import { AiOutlineMenu } from "react-icons/ai"
-import { Avatar } from "../avatar"
 import { useCallback, useState } from "react"
 import { MenuItem } from "../menu-item"
 
 import useRegisterModal from "../../hooks/useRegisterModal"
+import { RegisterModal } from "../modals/register-modal"
 import useLoginModal from "../../hooks/useLoginModal"
 import { ressetAuthCookies } from "@/lib/actions"
+import Image from "next/image"
 
 interface UserMenuProps {
     currentUser?: any | null
@@ -39,7 +40,7 @@ export const UserMenu = ({currentUser}: UserMenuProps) => {
                     >
                     <AiOutlineMenu />
                     <div className="hidden md:block">
-                        <Avatar />
+                        <Image src={"/images/placeholder.png"} className="rounded-full" height={30} width={30} alt="Avatar" />
                     </div>
                 </div>
             </div>
@@ -60,7 +61,10 @@ export const UserMenu = ({currentUser}: UserMenuProps) => {
                         ):(
                             <>
                                 <MenuItem onclick={loginModal.onOpen} label="Login"/>
-                                <MenuItem onclick={registerModal.onOpen} label="Sign Up"/>
+                                <MenuItem
+                                    onclick={registerModal.onOpen}
+                                    label="Sign Up"
+                                />
                             </>
                         )}
                     </div>
