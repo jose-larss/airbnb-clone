@@ -1,9 +1,9 @@
-from django.urls import path
+from django.urls import path, re_path, include
 
-from users import views
+#from users.views import token_login_cookie
 
 urlpatterns = [
-    path("user/register/", views.register_view),
-    path("user/login/", views.my_token_obtain_pair_view),
-    path('user/me/', views.current_user, name='current_user'),
+    #path("auth/token/login/", token_login_cookie),
+    re_path(r'^auth/', include('djoser.urls')),
+    re_path(r'^auth/', include('djoser.urls.authtoken')),
 ]

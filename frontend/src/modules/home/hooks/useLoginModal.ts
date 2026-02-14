@@ -2,14 +2,16 @@ import {create} from "zustand";
 
 interface LoginModalStore {
     isOpen: boolean;
-    onOpen: () => void;
+    onOpen: (onSuccess?: () => void) => void
     onClose: () => void;
+    onSuccess?: () => void
 }
 
 const useLoginModal = create<LoginModalStore>((set) => ({
+    onSuccess: undefined,
     isOpen: false,
-    onOpen: () => set({isOpen:true}),
-    onClose: () => set({isOpen:false}),
+    onOpen: (onSuccess) => set({isOpen:true, onSuccess }),
+    onClose: () => set({isOpen:false, onSuccess: undefined }),
 }))
 
 export default useLoginModal

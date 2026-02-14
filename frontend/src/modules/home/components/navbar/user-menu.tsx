@@ -1,27 +1,74 @@
 "use client"
 
 import { AiOutlineMenu } from "react-icons/ai"
-import { useCallback, useState } from "react"
-import { MenuItem } from "../menu-item"
+import { useCallback, useEffect, useState } from "react"
+import { MenuItem } from "./menu-item"
 
-import useRegisterModal from "../../hooks/useRegisterModal"
-import { RegisterModal } from "../modals/register-modal"
+import useRegisterModal from "../../../auth/hooks/useRegisterModal"
+import { RegisterModal } from "../../../auth/components/register-modal"
 import useLoginModal from "../../hooks/useLoginModal"
-import { ressetAuthCookies } from "@/lib/actions"
+//import { ressetAuthCookies } from "@/lib/actions"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
+import { CustomUser } from "@/modules/types"
 
 interface UserMenuProps {
-    currentUser?: any | null
+    currentUser: CustomUser | null;
+    setCurrentUser: (user: CustomUser | null) => void
 }
 
-export const UserMenu = ({currentUser}: UserMenuProps) => {
+export const UserMenu = ({currentUser, setCurrentUser}: UserMenuProps) => {
     const [isOpen, setIsOpen] = useState(false)
+    
     const registerModal = useRegisterModal()
     const loginModal = useLoginModal()
+
+    //const [currentUser, setCurrentUser] = useState(null)
+    const router = useRouter()
 
     const toggleOpen = useCallback(() => {
         setIsOpen((value) => !value)
     }, [])
+
+    const logoutUser = async () => {
+        try {
+            const token = localStorage.getItem("token");
+            if (token) {
+            
+                await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/token/logout/`, {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Token ${token}`,
+                    },
+                });
+            }
+        } catch (error) {
+            console.error("Error en logout:", error);
+            router.push("/");
+        } finally {
+            localStorage.removeItem("token");
+            setCurrentUser(null) // 🔥 ESTO ES LO QUE FALTABA
+            router.push("/")
+        }
+    }
+
+    // 🔑 Login callback
+    const handleLoginSuccess = async () => {
+        // Traemos usuario después de login
+        const token = localStorage.getItem("token")
+        if (!token) return
+
+        try {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/users/me/`, {
+                headers: { Authorization: `Token ${token}` },
+            })
+            if (!res.ok) return setCurrentUser(null)
+            const data = await res.json()
+            setCurrentUser(data)
+        } catch {
+            setCurrentUser(null)
+        }
+    }
  
     return(
         <div className="relative">
@@ -30,7 +77,7 @@ export const UserMenu = ({currentUser}: UserMenuProps) => {
                     onClick={() => {}} 
                     className="hidden md:block text-sm font-semibold py-3 px-4 rounded-full
                                  hover:bg-neutral-100 transition cursor-pointer">
-                        Airbnb Home
+                        Airbnb your Home
                 </div>
 
                 <div
@@ -56,11 +103,14 @@ export const UserMenu = ({currentUser}: UserMenuProps) => {
                                 <MenuItem onclick={() => {}} label="My properties"/>
                                 <MenuItem onclick={() => {}} label="AirBnb my home"/>
                                 <hr/>
-                                <MenuItem onclick={ressetAuthCookies} label="Logout"/>
+                                <MenuItem onclick={logoutUser} label="Logout"/>
                             </>                           
                         ):(
                             <>
-                                <MenuItem onclick={loginModal.onOpen} label="Login"/>
+                                <MenuItem 
+                                    onclick={() => loginModal.onOpen(handleLoginSuccess)} 
+                                    label="Login"
+                                />
                                 <MenuItem
                                     onclick={registerModal.onOpen}
                                     label="Sign Up"
