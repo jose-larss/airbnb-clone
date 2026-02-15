@@ -3,14 +3,10 @@ import { Search } from "./search"
 import { UserMenu } from "./user-menu"
 import Link from "next/link"
 import { Categories } from "./categories"
-import { CustomUser } from "@/modules/types"
 
-interface NavbarProps {
-    currentUser: CustomUser | null;
-    setCurrentUser: (user: CustomUser | null) => void
-}
 
-export const Navbar = ({currentUser, setCurrentUser}: NavbarProps) => {
+
+export const Navbar = () => {
     
     return(
         <nav className="w-full fixed bg-white z-10 shadow-sm">
@@ -28,10 +24,7 @@ export const Navbar = ({currentUser, setCurrentUser}: NavbarProps) => {
                             />
                         </Link>
                         <Search />
-                        <UserMenu 
-                            currentUser={currentUser}
-                            setCurrentUser={setCurrentUser}
-                        />
+                        <UserMenu />
                     </div>
                 </div>
             </div>

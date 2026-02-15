@@ -4,10 +4,10 @@ import {z} from "zod";
 import { AiFillGithub } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import { useCallback, useEffect, useState } from "react";
-import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 
 import useRegisterModal from "../hooks/useRegisterModal";
-import useLoginModal from "../../home/hooks/useLoginModal";
+import useLoginModal from "../hooks/useLoginModal";
 
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -18,9 +18,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { loginSchema } from "../schemas";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useAuthStore } from "@/modules/store/auth-store";
 
 
 export const LoginModal = () => {
+    const router = useRouter()
+    const refreshUser = useAuthStore((state) => state.refreshUser)
+
     const registerModal = useRegisterModal() // hook de registro
     const loginModal = useLoginModal()
 
@@ -28,8 +32,6 @@ export const LoginModal = () => {
 
     // Animación de apertura/cierre
     const [showModal, setShowModal] = useState(loginModal.isOpen);
-
-    const router = useRouter()
 
     const form = useForm<z.infer<typeof loginSchema>>({
         mode: "all",
@@ -47,7 +49,7 @@ export const LoginModal = () => {
     const onSubmit = (values: z.infer<typeof loginSchema>) => {
         fetchLogin(values)
     }
-
+    
     const fetchLogin = async (data: z.infer<typeof loginSchema>) => {
         try {
             const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/token/login/`, {
@@ -74,18 +76,19 @@ export const LoginModal = () => {
             }
             const dataBack = await response.json();
             console.log("dataBack es", dataBack)
-            //setUse(user) // 🔥 actualiza TODO al instante
+
             // Si la respuesta es exitosa
-            //muy importante
-            loginModal.onSuccess?.()
+            // 🔹 Guardamos el token para usarlo en otras llamadas a la API
+            localStorage.setItem('token', dataBack.auth_token);
+            //se llama a store
+            refreshUser()
+
             loginModal.onClose()
             toast.success('Login realizado correctamente')
             
             //se limpia el formulario
-            //form.reset()
+            form.reset()
 
-            // 🔹 Guardamos el token para usarlo en otras llamadas a la API
-            localStorage.setItem('token', dataBack.auth_token);
             router.push("/")
             //return response.json();
             
@@ -97,7 +100,7 @@ export const LoginModal = () => {
             setIsLoading(false)
         }
     }
-
+    
     const handleClose = useCallback(() => {
         if (isLoading) return;
 
@@ -107,10 +110,10 @@ export const LoginModal = () => {
         }, 300);
     }, [isLoading, loginModal]);
 
-    const handleCambio = () => {
+    const handleCambio = useCallback(() => {
         loginModal.onClose()
         registerModal.onOpen()
-    }    
+    }, [loginModal, registerModal])    
 
     const footerContent = (
         <div className="flex flex-col gap-4 mt-3">
@@ -169,7 +172,7 @@ export const LoginModal = () => {
                             >
                                 <IoMdClose size={18} />
                             </button>
-                            <div className="text-lg font-semibold">Registro</div>
+                            <div className="text-lg font-semibold">Login</div>
                         </div>
                         {/* BODY */}
 

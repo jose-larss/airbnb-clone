@@ -7,50 +7,52 @@ import { Navbar } from "@/modules/home/components/navbar/navbar";
 import { RegisterModal } from "@/modules/auth/components/register-modal";
 import { Toaster } from "@/components/ui/sonner";
 import { LoginModal } from "@/modules/auth/components/login-modal";
-import { getAuthenticatedUser } from "@/lib/actions";
+import ClientAuthInit from "@/modules/auth/provider/client-auth-init";
 
-import { Providers } from "@/modules/home/provider/provider";
 
 
 const nunito = Nunito({
-  subsets: ["latin"],
+    subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "DRF + NextJs AirBnb Clone antonio",
-  description: "version mejorada de antonio con componentes shadCn, tanstack",
+    title: "DRF + NextJs AirBnb Clone antonio",
+    description: "version mejorada de antonio con componentes shadCn, tanstack",
 };
 
 export default async function RootLayout({children,}: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
 
   return (
     <html lang="es">
-      <body className={nunito.className}>
+        <body className={nunito.className}>
 
-        <Toaster
-          position="top-right"      // posición global por defecto
-          richColors                 // usa colores automáticos según tipo
-          toastOptions={{
-            duration: 4000,
-            style: {
-              fontSize: "18px",
-              padding: "12px 20px",
-              maxWidth: "350px",
-            },
-          }}
-        />
+            <Toaster
+                position="top-right"      // posición global por defecto
+            richColors                 // usa colores automáticos según tipo
+            toastOptions={
+                {
+                    duration: 4000,
+                    style: {
+                        fontSize: "18px",
+                        padding: "12px 20px",
+                        maxWidth: "350px",
+                    },
+                }
+            }
+            />
 
-        <LoginModal />
-        <RegisterModal/>
-
-        <Providers>
+            <LoginModal />
+            <RegisterModal/>
+            <Navbar/>
             <div className="pt-24">
+                //hard refresh de inicio
+                <ClientAuthInit/>
                 {children}
             </div>
-        </Providers>
-      </body>
+        
+        </body>
     </html>
   );
 }

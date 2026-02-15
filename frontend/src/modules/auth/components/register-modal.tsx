@@ -9,7 +9,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import useRegisterModal from "../hooks/useRegisterModal";
-import useLoginModal from "../../home/hooks/useLoginModal";
+import useLoginModal from "../hooks/useLoginModal";
 
 import { toast } from "sonner";
 
@@ -52,10 +52,10 @@ export const RegisterModal = () => {
         }, 300);
     }, [isLoading, registerModal]);
     
-    const handleCambio = () => {
+    const handleCambio = useCallback(() => {
         registerModal.onClose()
         loginModal.onOpen()
-    }
+    }, [registerModal, loginModal])
 
     const onSubmit = (values: z.infer<typeof registerSchema>) => {
         fetchRegister(values)
