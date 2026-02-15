@@ -1,59 +1,50 @@
-from rest_framework import status
+from djoser.views import TokenCreateView
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 
-from rest_framework_simplejwt.tokens import RefreshToken
-
-from users.serializers import RegisterSerializer, MyTokenObtainPairSerializer, UserSerializer
-
-
-
-@api_view(['GET'])
-@permission_classes([IsAuthenticated])
-def current_user(request):
-    """
-    Devuelve los datos del usuario autenticado.
-    El token JWT debe enviarse en el header Authorization: Bearer <access_token>
-    """
-    user = request.user
-    serializer = UserSerializer(user)
-
-    return Response(serializer.data, status=status.HTTP_200_OK)
-
-
-@api_view(['POST'])
+"""
+@api_view(["POST"])
 @permission_classes([AllowAny])
-def my_token_obtain_pair_view(request):
-    serializer = MyTokenObtainPairSerializer(data=request.data)
+def token_login_cookie(request):
+    # Reutilizamos la lógica interna de Djoser
+    view = TokenCreateView.as_view()
+    response = view(request._request)
 
-    if serializer.is_valid():
-        user = serializer.user
-        refresh = RefreshToken.for_user(user)
-       
-        return Response({
-            'refresh': str(refresh),
-            'access': str(refresh.access_token),
-        }, status=status.HTTP_200_OK)
-    
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    # Si hubo error (credenciales inválidas, etc.)
+    if response.status_code != 200:
+        return response
+
+    token = response.data.get("auth_token")
+
+    response.set_cookie(
+        key="auth_token",
+        value=token,
+        httponly=True,
+        secure=True,      # ⚠️ ponlo en False solo en desarrollo
+        samesite="Lax",
+    )
+
+    response.data = {"detail": "Login ok"}
+    return response
 
 
+from djoser.views import TokenCreateView
+from rest_framework.response import Response
 
-@api_view(['POST'])
-@permission_classes([AllowAny])
-def register_view(request):
-    serializer = RegisterSerializer(data=request.data)
+class TokenCreateCookieView(TokenCreateView):
+    def post(self, request, *args, **kwargs):
+        response = super().post(request, *args, **kwargs)
+        token = response.data.get("auth_token")
 
-    if serializer.is_valid():
-        user = serializer.save()
-        
-        return Response(
-            {
-                "message": "Usuario registrado correctamente",
-                "user": {
-                    "email": user.email,
-                    "username": user.username
-                }
-            },status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        response.set_cookie(
+            "auth_token",
+            token,
+            httponly=True,
+            secure=True,
+            samesite="Lax",
+        )
+
+        response.data = {"detail": "Login ok"}
+        return response
+"""

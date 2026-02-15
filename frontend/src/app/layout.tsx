@@ -1,42 +1,58 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import "./globals.css";
-import { Navbar } from "@/modules/home/components/navbar";
-import { RegisterModal } from "@/modules/home/components/modals/register-modal";
-import { Toaster } from "react-hot-toast";
-import { LoginModal } from "@/modules/home/components/modals/login-modal";
-import { getAuthenticatedUser } from "@/lib/actions";
-import { ModalProvider } from "@/provider/modal-provider";
+import { Nunito } from "next/font/google";
 
-const inter = Inter({
-  subsets: ["latin"],
+import "./globals.css";
+
+import { Navbar } from "@/modules/home/components/navbar/navbar";
+import { RegisterModal } from "@/modules/auth/components/register-modal";
+import { Toaster } from "@/components/ui/sonner";
+import { LoginModal } from "@/modules/auth/components/login-modal";
+import ClientAuthInit from "@/modules/auth/provider/client-auth-init";
+
+
+
+const nunito = Nunito({
+    subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: "DRF + NextJs AirBnb Clone",
-  description: "version mejorada de stein con componentes shadCn, tanstack",
+    title: "DRF + NextJs AirBnb Clone antonio",
+    description: "version mejorada de antonio con componentes shadCn, tanstack",
 };
 
 export default async function RootLayout({children,}: Readonly<{
-  children: React.ReactNode;
+    children: React.ReactNode;
 }>) {
 
-  const currentUser = await getAuthenticatedUser()
-  
   return (
     <html lang="es">
-      <body className={inter.className}>
+        <body className={nunito.className}>
 
-        <Toaster />
-        <ModalProvider />
+            <Toaster
+                position="top-right"      // posición global por defecto
+            richColors                 // usa colores automáticos según tipo
+            toastOptions={
+                {
+                    duration: 4000,
+                    style: {
+                        fontSize: "18px",
+                        padding: "12px 20px",
+                        maxWidth: "350px",
+                    },
+                }
+            }
+            />
 
-        <LoginModal />
-        <Navbar currentUser = {currentUser}/>
-
-        <div className="pt-24">
-          {children}
-        </div>
-      </body>
+            <LoginModal />
+            <RegisterModal/>
+            <Navbar/>
+            <div className="pt-24">
+                //hard refresh de inicio
+                <ClientAuthInit/>
+                {children}
+            </div>
+        
+        </body>
     </html>
   );
 }
