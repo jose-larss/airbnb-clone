@@ -8,6 +8,7 @@ import useRegisterModal from "../../../auth/hooks/useRegisterModal"
 import useLoginModal from "../../../auth/hooks/useLoginModal"
 import { useAuthStore } from "@/modules/store/auth-store"
 import Image from "next/image"
+import useRentModal from "@/modules/listing/hooks/useRentModal"
 
 
 export const UserMenu = () => {
@@ -18,17 +19,24 @@ export const UserMenu = () => {
     
     const registerModal = useRegisterModal()
     const loginModal = useLoginModal()
+    const rentModal = useRentModal()
 
     const toggleOpen = useCallback(() => {
         setIsOpen((value) => !value)
     }, [])
 
+    const onRent = useCallback(() => {
+        if (!user) {
+            return loginModal.onOpen()
+        }
+        rentModal.onOpen()
+    }, [user, loginModal, rentModal])
 
     return(
         <div className="relative">
             <div className="flex flex-row items-center gap-3">
                 <div
-                    onClick={() => {}} 
+                    onClick={onRent} 
                     className="hidden md:block text-sm font-semibold py-3 px-4 rounded-full
                                  hover:bg-neutral-100 transition cursor-pointer">
                         Airbnb your Home
@@ -55,7 +63,7 @@ export const UserMenu = () => {
                                 <MenuItem onclick={() => {}} label="My favorites"/>
                                 <MenuItem onclick={() => {}} label="My reservations"/>
                                 <MenuItem onclick={() => {}} label="My properties"/>
-                                <MenuItem onclick={() => {}} label="AirBnb my home"/>
+                                <MenuItem onclick={onRent} label="AirBnb my home"/>
                                 <hr/>
                                 <MenuItem onclick={logout} label="Logout"/>
                             </>                           

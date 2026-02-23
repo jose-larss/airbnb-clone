@@ -16,12 +16,12 @@ interface CategoryBoxProps {
 const CategoryBox = ({label, icon: Icon, selected}: CategoryBoxProps) => {
     const router = useRouter();
     const params = useSearchParams();
-
+  
     const handleClick = useCallback(() => {
         const currentQuery: Record<string, string> = params
             ? (qs.parse(params.toString()) as Record<string, string>)
             : {}
-
+    
         const updatedQuery: Record<string, string | undefined> = {
             ...currentQuery,
             category:
@@ -29,7 +29,7 @@ const CategoryBox = ({label, icon: Icon, selected}: CategoryBoxProps) => {
                     ? undefined
                     : label,
         }
-
+        
         const url = qs.stringifyUrl(
             {
                 url: "/",
@@ -37,7 +37,7 @@ const CategoryBox = ({label, icon: Icon, selected}: CategoryBoxProps) => {
             },
             { skipNull: true }
         )
-
+      
         router.push(url)
     }, [label, params, router])
 

@@ -69,8 +69,7 @@ export const RegisterModal = () => {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(data),                
-            });
-            
+            });     
             if (!response.ok) {
                 // Manejo de errores si el backend devuelve un estado no exitoso
                 const errorData = await response.json();
@@ -79,20 +78,16 @@ export const RegisterModal = () => {
                 const messages = Object.values(errorData)
                     .flat() // por si hay arrays dentro (como ["Enter a valid email address."])
                     .join("\n");  // cada mensaje en una línea
-
                 toast.error(messages || "Error desconocido en el servidor", 
                     {style: { whiteSpace: "pre-line" } // importante para que respete los \n}
                 });
-                return;
-                
+                return;           
             }
             // Si la respuesta es exitosa
             registerModal.onClose()
             toast.success('Registro de usuario realizado correctamente')
             //se limpia el formulario
-            form.reset()
-            //return response.json();
-            
+            form.reset()     
         } catch (error) {
             // Manejo de errores de red o conexión
             console.error('Error al enviar datos:', error);
