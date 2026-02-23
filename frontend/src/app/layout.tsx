@@ -8,6 +8,7 @@ import { RegisterModal } from "@/modules/auth/components/register-modal";
 import { Toaster } from "@/components/ui/sonner";
 import { LoginModal } from "@/modules/auth/components/login-modal";
 import ClientAuthInit from "@/modules/auth/provider/client-auth-init";
+import { RentModal } from "@/modules/listing/components/rent-modal";
 
 
 
@@ -23,11 +24,9 @@ export const metadata: Metadata = {
 export default async function RootLayout({children,}: Readonly<{
     children: React.ReactNode;
 }>) {
-
   return (
     <html lang="es">
         <body className={nunito.className}>
-
             <Toaster
                 position="top-right"      // posición global por defecto
             richColors                 // usa colores automáticos según tipo
@@ -42,7 +41,7 @@ export default async function RootLayout({children,}: Readonly<{
                 }
             }
             />
-
+            <RentModal/>
             <LoginModal />
             <RegisterModal/>
             <Navbar/>
@@ -51,7 +50,6 @@ export default async function RootLayout({children,}: Readonly<{
                 <ClientAuthInit/>
                 {children}
             </div>
-        
         </body>
     </html>
   );
