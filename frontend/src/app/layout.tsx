@@ -8,7 +8,7 @@ import { RegisterModal } from "@/modules/auth/components/register-modal";
 import { Toaster } from "@/components/ui/sonner";
 import { LoginModal } from "@/modules/auth/components/login-modal";
 import ClientAuthInit from "@/modules/auth/provider/client-auth-init";
-import { RentModal } from "@/modules/listing/components/rent-modal";
+import { RentModal } from "@/modules/listing/components/modal/rent-modal";
 
 
 
@@ -48,7 +48,9 @@ export default async function RootLayout({children,}: Readonly<{
             <div className="pt-24">
                 //hard refresh de inicio
                 <ClientAuthInit/>
-                {children}
+                <div className="pb-20 pt-28">
+                    {children}
+                </div>
             </div>
         </body>
     </html>

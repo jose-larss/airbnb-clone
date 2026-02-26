@@ -6,7 +6,16 @@ from property.models import Listing
 from rest_framework import serializers
 from property.models import Listing
 
-class ListingSerializer(serializers.ModelSerializer):
+
+
+class Listingserializer(serializers.ModelSerializer):
+    class Meta:
+        model = Listing
+        fields = ["id", "title", "description", "image", "category", "room_count", "bathroom_count", 
+                  "guest_count", "location_value", "price", "user", "created_at", "updated_at"]
+
+
+class ListingRegisterSerializer(serializers.ModelSerializer):
     # camelCase mapping
     guestCount = serializers.IntegerField(source="guest_count")
     roomCount = serializers.IntegerField(source="room_count")

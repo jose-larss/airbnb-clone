@@ -1,7 +1,7 @@
 "use client";
 
 import Select, { SingleValue } from "react-select";
-import useCountries, { CountryType } from "../hooks/useCountries";
+import useCountries, { CountryType } from "../../hooks/useCountries";
 
 interface CountrySelectProps {
     value: CountryType | null;
