@@ -1,13 +1,9 @@
 import { create } from "zustand"
+import { UserType } from "../auth/types"
 
-interface User {
-    id: number
-    username: string
-    email: string
-}
 
 interface AuthState {
-    user: User | null
+    user: UserType | null
     loading: boolean
     refreshUser: () => Promise<void>
     //login: (token: string) => Promise<void>
@@ -19,7 +15,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     loading: true,
 
     refreshUser: async () => {
-        const token = localStorage.getItem("token")
+        const token = localStorage.getItem("token")            
 
         if (!token) {
             set({ user: null, loading: false })

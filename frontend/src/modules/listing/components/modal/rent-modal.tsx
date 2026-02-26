@@ -2,15 +2,15 @@
 
 import {z} from "zod";
 import { Modal } from "@/modules/home/components/modals/modal"
-import useRentModal from "../hooks/useRentModal"
+import useRentModal from "../../hooks/useRentModal"
 import { useMemo, useState } from "react";
 import { categories } from "@/modules/home/components/navbar/categories";
 import { CategoryInput } from "./category-input";
 import { FieldValues, useForm } from "react-hook-form";
-import { listingSchema } from "../schemas";
+import { listingSchema } from "../../schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import dynamic from "next/dynamic";
-import useCountries, { CountryType } from "../hooks/useCountries";
+import useCountries, { CountryType } from "../../hooks/useCountries";
 import CountrySelect from "./country-select";
 import { Counter } from "./Counter";
 import { ImageUploads } from "./image-uploads";
