@@ -168,6 +168,8 @@ DJOSER = {
     'SERIALIZERS': {
         # si se quiere poner en register mas campos aparte de email / username password
         "user_create": "users.serializers.CustomUserCreateSerializer",  # opcional si tienes campos extra
+        "user": "users.serializers.CustomUserSerializer",
+        "current_user": "users.serializers.CustomUserSerializer",
     },
     
 }

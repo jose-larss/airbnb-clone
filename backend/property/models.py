@@ -35,7 +35,22 @@ class Listing(models.Model):
 
     def __str__(self):
         return self.title
-    
+
+
+
+class Favorite(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    listing = models.ForeignKey(Listing, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ("user", "listing")
+        verbose_name = "Favorito"
+        verbose_name_plural = "Favoritos"
+
+    def __str__(self):
+        return f"{self.user} - {self.listing}"
+
+
 
 class Reservation(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
