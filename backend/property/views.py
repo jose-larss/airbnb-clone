@@ -1,13 +1,40 @@
 from django.shortcuts import render
 
 from rest_framework import status
+from rest_framework.generics import get_object_or_404
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
-from property.models import Listing
+from property.models import Listing, Favorite
 
 from property.serializers import ListingRegisterSerializer, Listingserializer
+
+
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def add_favorite(request):
+    listing_id = request.data.get("listing_id")
+    listing = get_object_or_404(Listing, id=listing_id)
+    """
+    es lo mismo que get_objedct_or_404
+    try:
+        listing = Listing.objects.get(id=listing_id)
+    except Listing.DoesNotExist:
+        return Response({"detail": "Listing not found"},status=status.HTTP_404_NOT_FOUND)
+    """
+    Favorite.objects.get_or_create(user=request.user, listing=listing)
+
+    return Response({"favorited": True}, status=status.HTTP_200_OK)
+
+
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated])
+def remove_favorite(request, listing_id):
+    Favorite.objects.filter(user=request.user, listing_id=listing_id).delete()
+
+    return Response({"favorited": False}, status=status.HTTP_200_OK)
 
 
 

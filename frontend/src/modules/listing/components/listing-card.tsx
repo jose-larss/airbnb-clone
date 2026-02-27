@@ -20,7 +20,6 @@ interface ListingCardProp {
 
 export const ListingCard = ({reservation, onAction, disabled, actionLabel, actionId="", data, currentUser}: ListingCardProp) => {
     const router = useRouter()
-
     //obtenemos el objeto de la propiedad
     const {getByValue} = useCountries()
     const location = getByValue(data.location_value)
@@ -61,6 +60,7 @@ export const ListingCard = ({reservation, onAction, disabled, actionLabel, actio
                 <div className="aspect-square w-full relative overflow-hidden rounded-xl">
                     <Image 
                         fill
+                        sizes="(max-width: 768px) 100vw, 33vw"
                         alt="listing"
                         src={data.image}
                         className="object-cover group-hover:scale-110 w-full h-full transition"
