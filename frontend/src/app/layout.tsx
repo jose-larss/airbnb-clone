@@ -29,28 +29,28 @@ export default async function RootLayout({children,}: Readonly<{
         <body className={nunito.className}>
             <Toaster
                 position="top-right"      // posición global por defecto
-            richColors                 // usa colores automáticos según tipo
-            toastOptions={
-                {
-                    duration: 4000,
-                    style: {
-                        fontSize: "18px",
-                        padding: "12px 20px",
-                        maxWidth: "350px",
-                    },
+                richColors                 // usa colores automáticos según tipo
+                toastOptions={
+                    {
+                        duration: 4000,
+                        style: {
+                            fontSize: "18px",
+                            padding: "12px 20px",
+                            maxWidth: "350px",
+                        },
+                    }
                 }
-            }
             />
             <RentModal/>
             <LoginModal />
             <RegisterModal/>
             <Navbar/>
             <div className="pt-24">
-                //hard refresh de inicio
+                
                 <ClientAuthInit/>
-                <div className="pb-20 pt-28">
+                
                     {children}
-                </div>
+                
             </div>
         </body>
     </html>

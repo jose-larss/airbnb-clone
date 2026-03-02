@@ -40,6 +40,16 @@ def remove_favorite(request, listing_id):
 
 @api_view(["GET"])
 @permission_classes([AllowAny])
+def detail_listing(request, listing_id):
+    listing = get_object_or_404(Listing, id=listing_id)
+    serializer = Listingserializer(listing)
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+
+@api_view(["GET"])
+@permission_classes([AllowAny])
 def list_listing(request):
     listings = Listing.objects.all()
     serializer = Listingserializer(listings, many=True)
