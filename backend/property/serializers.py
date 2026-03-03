@@ -6,9 +6,12 @@ from property.models import Listing
 from rest_framework import serializers
 from property.models import Listing
 
+from users.serializers import CustomUserSerializer
 
 
 class Listingserializer(serializers.ModelSerializer):
+    user = CustomUserSerializer(read_only=True)
+
     class Meta:
         model = Listing
         fields = ["id", "title", "description", "image", "category", "room_count", "bathroom_count", 

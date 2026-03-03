@@ -3,9 +3,10 @@ import useCountries from "../hooks/useCountries";
 import Image from "next/image";
 import { ListingCategory } from "./listing-category";
 import dynamic from "next/dynamic";
+import { UserType } from "@/modules/auth/types";
 
 interface ListingInfoProps {
-    user: string;
+    user: UserType;
     category: {
         icon: IconType;
         label: string;
@@ -20,7 +21,7 @@ interface ListingInfoProps {
 
 export const ListingInfo = ({user, category, description, roomCount, bathCount, guestCount, locationValue}: ListingInfoProps) => {
     const {getByValue} = useCountries()
-
+  
     const coordinates = getByValue(locationValue)
 
     const Maps = dynamic(() => import('./modal/maps'), { ssr: false });
@@ -35,7 +36,7 @@ export const ListingInfo = ({user, category, description, roomCount, bathCount, 
         <div className="col-span-4 flex flex-col gap-8">
             <div className="flex flex-col gap-2">
                 <div className="text-xl font-semibold flex flex-row items-center gap-2">
-                    <div>Alojado por {user}</div>
+                    <div>Alojado por {user.username}</div>
                     <div className="hidden md:block">
                         <Image src={"/images/placeholder.png"} className="rounded-full" height={30} width={30} alt="Avatar" />
                     </div>
