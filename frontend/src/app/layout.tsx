@@ -11,7 +11,6 @@ import ClientAuthInit from "@/modules/auth/provider/client-auth-init";
 import { RentModal } from "@/modules/listing/components/modal/rent-modal";
 
 
-
 const nunito = Nunito({
     subsets: ["latin"],
 });

@@ -1,3 +1,5 @@
+import { UserType } from "../auth/types"
+
 export type ListingsType = {
     id: string,
     title: string, 
@@ -9,7 +11,7 @@ export type ListingsType = {
     guest_count: number, 
     location_value: string, 
     price: number, 
-    user: string, 
+    user: UserType,
     created_at: string, 
     updated_at: string,
 }
