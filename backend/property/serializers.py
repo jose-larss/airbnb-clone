@@ -1,12 +1,48 @@
 from rest_framework import serializers
+from rest_framework.generics import get_object_or_404
 
 from property.models import Listing
 
 
 from rest_framework import serializers
-from property.models import Listing
+from property.models import Listing, Reservation
 
 from users.serializers import CustomUserSerializer
+
+
+
+
+class ReservationRegisterSerializer(serializers.ModelSerializer):
+    # camelCase mapping
+    startDate = serializers.DateTimeField(source="start_date")
+    endDate = serializers.DateTimeField(source="end_date")
+    totalPrice = serializers.IntegerField(source="total_price")
+    listingId = serializers.UUIDField(write_only=True)
+
+    class Meta:
+        model = Reservation
+        fields = ("listingId", "startDate", "endDate", "totalPrice", "user")
+        read_only_fields = ["id", "user", "created_at", "updated_at"]
+
+    def create(self, validated_data):
+        """
+        👉 Hace DOS cosas a la vez:
+        Devuelve el valor de la clave
+        Elimina esa clave del diccionario
+        """
+        listing_id = validated_data.pop("listingId")
+        user = self.context["request"].user
+
+        listing = get_object_or_404(Listing, id=listing_id)
+
+        return Reservation.objects.create(listing=listing, user=user, **validated_data)
+
+
+class ReservationSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Reservation
+        fields = ["id", "total_price", "start_date", "end_date", "user", "listing", "created_at", "updated_at"]
 
 
 class Listingserializer(serializers.ModelSerializer):
