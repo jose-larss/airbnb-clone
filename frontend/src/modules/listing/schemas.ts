@@ -1,6 +1,19 @@
 // schemas/listing-schema.ts
 import { z } from "zod"
 
+
+export const reservationSchema = z.object({
+    totalPrice: z.number().positive().finite(),
+    listingId: z.string().uuid(),
+    startDate: z.coerce.date(),
+    endDate: z.coerce.date(),
+}).refine(
+    (data) => new Date(data.endDate) > new Date(data.startDate), {
+      message: "La fecha de salida debe ser posterior a la de entrada",
+      path: ["endDate"],
+    }
+);
+
 export const listingSchema = z.object({
     category: z.string().min(1, "Selecciona una categoría"),
     //location: z.any().nullable(),

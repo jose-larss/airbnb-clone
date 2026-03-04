@@ -6,9 +6,10 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 
-from property.models import Listing, Favorite
+from users.models import CustomUser
+from property.models import Listing, Favorite, Reservation
 
-from property.serializers import ListingRegisterSerializer, Listingserializer
+from property.serializers import ListingRegisterSerializer, Listingserializer, ReservationRegisterSerializer, ReservationSerializer
 
 
 
@@ -49,6 +50,19 @@ def detail_listing(request, listing_id):
 
 
 @api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def list_reservations(request, listing_id=None, author_id=None, user_id=None):
+    #if listing_id:
+    listing = get_object_or_404(Listing, id=listing_id)
+    #if user:
+    #    user = get_object_or_404(CustomUser, id=user_id)
+    reservas = Reservation.objects.filter(listing=listing).order_by("-created_at")
+
+    serializer = ReservationSerializer(reservas, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(["GET"])
 @permission_classes([AllowAny])
 def list_listing(request):
     listings = Listing.objects.all()
@@ -57,11 +71,46 @@ def list_listing(request):
     return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def register_reservation(request):
+    serializer = ReservationRegisterSerializer(data=request.data, context={"request": request})
+    if serializer.is_valid(): #raise_exception=True
+        serializer.save()
+
+        return Response({"message": "La reserva se ha realizado con exito"}, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+"""
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def register_reservation(request):
+    startDate = request.data.get("startDate")
+    endDate = request.data.get("endDate")
+    totalPrice = request.data.get("totalPrice")
+    listingId = request.data.get("listingId")
+
+    print(startDate, endDate, totalPrice, listingId)
+
+    listing = get_object_or_404(Listing, id=listingId)
+    user = request.user
+
+    Reservation.objects.create(
+        total_price=totalPrice,
+        start_date=startDate,
+        end_date=endDate, 
+        listing=listing,
+        user=user,
+    )
+    return Response({"message": "La reserva se ha realizado correctamente"}, status=status.HTTP_201_CREATED)
+"""
+
+
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def register_listing(request):    
     serializer = ListingRegisterSerializer(data=request.data, context={"request": request})
-    if serializer.is_valid(raise_exception=True):
+    if serializer.is_valid(): #raise_exception=True
         serializer.save()
 
         return Response({"message": "El registro se ha realizado con exito"}, status=status.HTTP_201_CREATED)

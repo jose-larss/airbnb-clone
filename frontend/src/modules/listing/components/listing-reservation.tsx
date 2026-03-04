@@ -33,7 +33,7 @@ export const ListingReservation = ({price, totalPrice, onChangeDate, dateRange, 
                     onClick={onSubmit}
                     size={"lg"}
                     variant={"airBnb"}
-                    className="w-full"
+                    className="w-full cursor-pointer"
                 >
                     Reserva
                 </Button>
