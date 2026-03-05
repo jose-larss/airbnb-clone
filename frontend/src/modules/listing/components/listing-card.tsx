@@ -1,5 +1,5 @@
 import { UserType } from "@/modules/auth/types"
-import { ListingsType } from "../types"
+import { ListingsType, ReservationType } from "../types"
 import { useRouter } from "next/navigation"
 import useCountries from "../hooks/useCountries"
 import { useCallback, useMemo } from "react"
@@ -9,7 +9,7 @@ import { HeartButtom } from "./heart-buttom"
 import { Button } from "@/components/ui/button"
 
 interface ListingCardProp {
-    reservation?: string // de la tavbla reservation 
+    reservation: ReservationType // de la tavbla reservation 
     onAction?: (id: string) => void
     disabled?: boolean
     actionLabel?: string,
@@ -36,7 +36,7 @@ export const ListingCard = ({reservation, onAction, disabled, actionLabel, actio
 
     const price = useMemo(() => {
         if (reservation) {
-            return reservation.totalPrice
+            return reservation.total_price
         }
         return data.price
     }, [reservation, data.price])
@@ -45,10 +45,10 @@ export const ListingCard = ({reservation, onAction, disabled, actionLabel, actio
         if (!reservation) {
             return null
         }        
-        const start = new Date(reservation.startdate)
-        const end = new Date(reservation.enddate)
+        const start = new Date(reservation.start_date)
+        const end = new Date(reservation.end_date)
 
-        return `${format(start, 'pp')} - ${format(end, 'pp')}`
+        return `${format(start, 'PP')} - ${format(end, 'PP')}`
     }, [reservation])
 
     return(
@@ -88,10 +88,12 @@ export const ListingCard = ({reservation, onAction, disabled, actionLabel, actio
                 </div>
                 {onAction && actionLabel && (
                     <Button 
-                        size={"sm"}
-                        
+                        size={"lg"}
+                        variant={"airBnb"}
                         onClick={handleCancel}
-                    />
+                    >
+                        {actionLabel}
+                    </Button>
                 )}
             </div>
         </div>
