@@ -9,9 +9,11 @@ import useLoginModal from "../../../auth/hooks/useLoginModal"
 import { useAuthStore } from "@/modules/store/auth-store"
 import Image from "next/image"
 import useRentModal from "@/modules/listing/hooks/useRentModal"
+import { useRouter } from "next/navigation"
 
 
 export const UserMenu = () => {
+    const router = useRouter()
     const user = useAuthStore(state => state.user);
     const logout = useAuthStore(state => state.logout);
 
@@ -59,7 +61,7 @@ export const UserMenu = () => {
                     <div className="flex flex-col cursor-pointer">
                         {user ? (
                             <>
-                                <MenuItem onclick={() => {}} label="My trips"/>
+                                <MenuItem onclick={() => router.push("/trips")} label="My trips"/>
                                 <MenuItem onclick={() => {}} label="My favorites"/>
                                 <MenuItem onclick={() => {}} label="My reservations"/>
                                 <MenuItem onclick={() => {}} label="My properties"/>

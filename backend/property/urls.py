@@ -10,5 +10,8 @@ urlpatterns = [
     path("favorites/<uuid:listing_id>/remove/", remove_favorite),
     path("favorites/", add_favorite),
     path("reservation/register/", register_reservation),
-    path("reservations/<uuid:listing_id>/", list_reservations),
+    #path("reservations/<uuid:listing_id>/", list_reservations),
+    #path("reservations/<uuid:user_id>/", list_reservations),
+    path("reservations/listing/<uuid:listing_id>/", list_reservations),
+    path("reservations/user/<uuid:user_id>/", list_reservations),
 ]

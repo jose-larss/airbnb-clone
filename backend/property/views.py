@@ -52,11 +52,17 @@ def detail_listing(request, listing_id):
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def list_reservations(request, listing_id=None, author_id=None, user_id=None):
-    #if listing_id:
-    listing = get_object_or_404(Listing, id=listing_id)
-    #if user:
-    #    user = get_object_or_404(CustomUser, id=user_id)
-    reservas = Reservation.objects.filter(listing=listing).order_by("-created_at")
+    if listing_id:
+        reservas = Reservation.objects.filter(listing__id=listing_id).order_by("-created_at")
+
+    elif user_id:
+        reservas = Reservation.objects.filter(user__id=user_id).order_by("start_date")
+
+    else:
+        return Response(
+            {"error": "Debe proporcionar listing_id o user_id"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
     serializer = ReservationSerializer(reservas, many=True)
     return Response(serializer.data, status=status.HTTP_200_OK)

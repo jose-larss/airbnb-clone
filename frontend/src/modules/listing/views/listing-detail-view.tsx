@@ -1,6 +1,6 @@
 "use client";
 
-import z, { string } from "zod";
+import {z} from "zod";
 import {toast} from "sonner";
 import { useAuthStore } from "@/modules/store/auth-store";
 import { ListingsType, ReservationType } from "../types";
@@ -35,10 +35,10 @@ export const ListingDetailView = ({listing}: ListingDetailViewProps) => {
     const [reservations, setReservations] = useState<ReservationType[]>([])
   
     useEffect(() => {
-        const getReservationsById = async (listing_id: string) => {
+        const getReservationsById = async () => {
             const token = localStorage.getItem("token");
             try {
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reservations/${listing_id}/`, {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reservations/listing/${listing.id}/`, {
                     headers: {
                         "Content-Type": "application/json",
                         "Authorization": `Token ${token}`, // 🔑 CLAVE
@@ -55,7 +55,7 @@ export const ListingDetailView = ({listing}: ListingDetailViewProps) => {
                 console.error("Error al obtener listado:", err);
             } 
         };
-        getReservationsById(listing.id)
+        getReservationsById()
     }, [listing.id, dateRange])
 
     useEffect(() => {
@@ -69,6 +69,7 @@ export const ListingDetailView = ({listing}: ListingDetailViewProps) => {
         }
     }, [dateRange, listing.price])
 
+    
     const fetchReservationUser = async (data: z.infer<typeof reservationSchema>) => {
         const token = localStorage.getItem("token");
         try {
@@ -97,7 +98,7 @@ export const ListingDetailView = ({listing}: ListingDetailViewProps) => {
             toast.success("Reserva creada con exito")
             setDateRange(undefined)
             setTotalPrice(listing.price)
-            router.refresh()
+            router.push(`/trips`)
                
         } catch (error) {
             // Manejo de errores de red o conexión

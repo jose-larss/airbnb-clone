@@ -38,11 +38,6 @@ class ReservationRegisterSerializer(serializers.ModelSerializer):
         return Reservation.objects.create(listing=listing, user=user, **validated_data)
 
 
-class ReservationSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Reservation
-        fields = ["id", "total_price", "start_date", "end_date", "user", "listing", "created_at", "updated_at"]
 
 
 class Listingserializer(serializers.ModelSerializer):
@@ -52,6 +47,14 @@ class Listingserializer(serializers.ModelSerializer):
         model = Listing
         fields = ["id", "title", "description", "image", "category", "room_count", "bathroom_count", 
                   "guest_count", "location_value", "price", "user", "created_at", "updated_at"]
+
+
+class ReservationSerializer(serializers.ModelSerializer):
+    listing = Listingserializer(many=False, read_only=True)
+    
+    class Meta:
+        model = Reservation
+        fields = ["id", "total_price", "start_date", "end_date", "user", "listing", "created_at", "updated_at"]
 
 
 class ListingRegisterSerializer(serializers.ModelSerializer):
