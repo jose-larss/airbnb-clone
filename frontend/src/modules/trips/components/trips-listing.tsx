@@ -5,6 +5,7 @@ import { ListingCard } from "@/modules/listing/components/listing-card";
 import { ReservationType } from "@/modules/listing/types"
 import { useRouter } from "next/navigation"
 import { useCallback, useState } from "react";
+import { toast } from "sonner";
 
 interface TripsListingProps {
     reservations: ReservationType[]
@@ -15,37 +16,36 @@ export const TripsListing = ({reservations, currenUser}: TripsListingProps) => {
     const router = useRouter()
 
     const [deletingId, setDeletingId] = useState("")
+    const [localReservations, setLocalReservations] = useState(reservations)
 
-    const onCancel = useCallback((id: string) => {
+    const onCancel = useCallback(async (id: string) => {
         setDeletingId(id)
         //llamar a api de borrar reserva
-        /*
         const token = localStorage.getItem('token');
         try {    
             // DELETE
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/favorites/${listingId}/remove/`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/reservation/${id}/remove/`, {
                 method: 'DELETE',
                     headers: {
                         Authorization: `Token ${token}`,
                     },
                 }
             );
-
             if (!response.ok) {
                 // Manejo de errores si el backend devuelve un estado no exitoso
-                throw new Error("Error al eliminar favorito");
-            }   
-            const data = await response.json()
-            //toast
-            //router.refresh()
-            //setHasFavorited(data.favorited); // 🔥 UI inmediata
+                throw new Error("Cancelar reserva");
+            }           
+            toast.success("reserva cancelada")
+            setLocalReservations((prev) =>
+                prev.filter((reservation) => reservation.id !== id)
+            )
         } catch (error) {
             console.error(error);
             //toast.error('Algo fue mal!');
         } finally {
             setDeletingId("")
         }
-        */
+        
     }, [router])
 
     return(
@@ -60,7 +60,7 @@ export const TripsListing = ({reservations, currenUser}: TripsListingProps) => {
                 </div>
             </div>
             <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8">
-                {reservations.map((reservation) => (
+                {localReservations.map((reservation) => (
                     <ListingCard
                         key={reservation.id}
                         reservation={reservation}

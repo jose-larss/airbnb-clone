@@ -91,6 +91,7 @@ export const ListingCard = ({reservation, onAction, disabled, actionLabel, actio
                         size={"lg"}
                         variant={"airBnb"}
                         onClick={handleCancel}
+                        className="cursor-pointer"
                     >
                         {actionLabel}
                     </Button>

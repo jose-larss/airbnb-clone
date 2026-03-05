@@ -1,7 +1,14 @@
 from django.urls import path
 
 
-from property.views import register_listing, list_listing, add_favorite, remove_favorite, detail_listing, register_reservation, list_reservations
+from property.views import (register_listing, 
+                            list_listing, 
+                            add_favorite, 
+                            remove_favorite, 
+                            detail_listing, 
+                            register_reservation, 
+                            list_reservations,
+                            remove_reservation)
 
 urlpatterns = [
     path("property/listing/<uuid:listing_id>/", detail_listing),
@@ -14,4 +21,5 @@ urlpatterns = [
     #path("reservations/<uuid:user_id>/", list_reservations),
     path("reservations/listing/<uuid:listing_id>/", list_reservations),
     path("reservations/user/<uuid:user_id>/", list_reservations),
+    path("reservation/<uuid:reservation_id>/remove/", remove_reservation),
 ]

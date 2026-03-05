@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.db.models import Q
 
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
@@ -36,6 +36,21 @@ def remove_favorite(request, listing_id):
     Favorite.objects.filter(user=request.user, listing_id=listing_id).delete()
 
     return Response({"favorited": False}, status=status.HTTP_200_OK)
+
+
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated])
+def remove_reservation(request, reservation_id):
+    user = request.user
+    deleted, _ = Reservation.objects.filter(Q(listing__user=user) | Q(user=user), id=reservation_id).delete()
+
+    if deleted == 0:
+        return Response(
+            {"error": "Reserva no encontrada o sin permiso"},
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+    return Response({"message": "Reserva borrada"}, status=status.HTTP_200_OK)
 
 
 
