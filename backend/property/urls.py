@@ -21,5 +21,6 @@ urlpatterns = [
     #path("reservations/<uuid:user_id>/", list_reservations),
     path("reservations/listing/<uuid:listing_id>/", list_reservations),
     path("reservations/user/<uuid:user_id>/", list_reservations),
+    path("reservations/author/<uuid:author_id>/", list_reservations),
     path("reservation/<uuid:reservation_id>/remove/", remove_reservation),
 ]

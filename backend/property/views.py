@@ -68,10 +68,16 @@ def detail_listing(request, listing_id):
 @permission_classes([IsAuthenticated])
 def list_reservations(request, listing_id=None, author_id=None, user_id=None):
     if listing_id:
+        #todas las reservas de una detewrmanda propiedad / listing
         reservas = Reservation.objects.filter(listing__id=listing_id).order_by("-created_at")
 
     elif user_id:
+        #todas las reservas realizadas por un determinado usuario
         reservas = Reservation.objects.filter(user__id=user_id).order_by("start_date")
+
+    elif author_id:
+        #todas las reservas realizadas en las propiedades de uno mismo
+        reservas = Reservation.objects.filter(listing__user_id=author_id).order_by("-created_at") #, user__id=author_id
 
     else:
         return Response(

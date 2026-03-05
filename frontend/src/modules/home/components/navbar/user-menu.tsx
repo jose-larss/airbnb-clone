@@ -63,7 +63,7 @@ export const UserMenu = () => {
                             <>
                                 <MenuItem onclick={() => router.push("/trips")} label="My trips"/>
                                 <MenuItem onclick={() => {}} label="My favorites"/>
-                                <MenuItem onclick={() => {}} label="My reservations"/>
+                                <MenuItem onclick={() => router.push("/reservations")} label="My reservations"/>
                                 <MenuItem onclick={() => {}} label="My properties"/>
                                 <MenuItem onclick={onRent} label="AirBnb my home"/>
                                 <hr/>
