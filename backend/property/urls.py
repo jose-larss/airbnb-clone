@@ -9,12 +9,15 @@ from property.views import (register_listing,
                             register_reservation, 
                             list_reservations,
                             remove_reservation,
-                            list_favorites)
+                            list_favorites, 
+                            remove_properties)
 
 urlpatterns = [
     path("property/listing/<uuid:listing_id>/", detail_listing),
     path("property/register/", register_listing),
     path("property/listings/", list_listing),
+    path("properties/<uuid:user_id>/", list_listing),
+    path("properties/<uuid:listing_id>/remove/", remove_properties),
 
     path("favorites/<uuid:listing_id>/remove/", remove_favorite),
     path("favorites/add/", add_favorite),
