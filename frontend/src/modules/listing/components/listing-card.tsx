@@ -9,7 +9,7 @@ import { HeartButtom } from "./heart-buttom"
 import { Button } from "@/components/ui/button"
 
 interface ListingCardProp {
-    reservation: ReservationType // de la tavbla reservation 
+    reservation?: ReservationType // de la tavbla reservation 
     onAction?: (id: string) => void
     disabled?: boolean
     actionLabel?: string,
@@ -50,6 +50,8 @@ export const ListingCard = ({reservation, onAction, disabled, actionLabel, actio
 
         return `${format(start, 'PP')} - ${format(end, 'PP')}`
     }, [reservation])
+    console.log("----------------------")
+    console.log("render card:", data.id);
 
     return(
         <div 
@@ -68,7 +70,6 @@ export const ListingCard = ({reservation, onAction, disabled, actionLabel, actio
                     <div className="absolute top-3 right-3">
                         <HeartButtom 
                             listingId={data.id}
-                            currentUser={currentUser}
                         />
                     </div>
                 </div>

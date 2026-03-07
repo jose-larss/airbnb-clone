@@ -18,6 +18,7 @@ from property.serializers import ListingRegisterSerializer, Listingserializer, R
 def add_favorite(request):
     listing_id = request.data.get("listing_id")
     listing = get_object_or_404(Listing, id=listing_id)
+    print("listingId", listing_id)
     """
     es lo mismo que get_objedct_or_404
     try:
@@ -25,8 +26,8 @@ def add_favorite(request):
     except Listing.DoesNotExist:
         return Response({"detail": "Listing not found"},status=status.HTTP_404_NOT_FOUND)
     """
-    Favorite.objects.get_or_create(user=request.user, listing=listing)
-
+    favorite = Favorite.objects.get_or_create(user=request.user, listing=listing)
+   
     return Response({"favorited": True}, status=status.HTTP_200_OK)
 
 
@@ -96,6 +97,19 @@ def list_listing(request):
     serializer = Listingserializer(listings, many=True)
 
     return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def list_favorites(request):
+
+    favorite_ids = list(Favorite.objects.filter(user=request.user).values_list("listing_id", flat=True))
+
+    listings = Listing.objects.filter(id__in=favorite_ids)
+   
+    serializer = Listingserializer(listings, many=True)
+
+    return Response(serializer.data, status=status.HTTP_200_OK) #serializer.data, 
 
 
 

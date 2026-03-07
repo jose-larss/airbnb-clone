@@ -1,17 +1,15 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { UserType } from "@/modules/auth/types";
 import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 import useFavorite from "../hooks/useFavorites";
 
 interface HeartButtomProps {
     listingId: string,
-    currentUser?: UserType | null
 }
 
-export const HeartButtom = ({listingId, currentUser}: HeartButtomProps) => {
-    const {hasFavorited, toggleFavorite} = useFavorite({listingId, currentUser})
+export const HeartButtom = ({listingId}: HeartButtomProps) => {
+    const {hasFavorited, toggleFavorite} = useFavorite({listingId})
     //onst hasFavorited = false
     //const toogleFavorited = () => {}
 

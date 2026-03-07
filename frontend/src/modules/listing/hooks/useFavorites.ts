@@ -1,30 +1,38 @@
 // hooks/useFavorite.ts
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useMemo } from "react";
 import useLoginModal from "@/modules/auth/hooks/useLoginModal";
 import { toast } from "sonner";
-import { UserType } from "@/modules/auth/types";
+import { useAuthStore } from "@/modules/store/auth-store";
 
 interface UseFavoriteProps {
     listingId: string;
-    currentUser?: UserType | null;
 }
 
-const useFavorite = ({ listingId, currentUser }: UseFavoriteProps) => {
+const useFavorite = ({ listingId }: UseFavoriteProps) => {
+    const hasFavorited =
+        useAuthStore((state) =>
+        state.user?.favorite_ids?.includes(listingId)
+        ) ?? false;
+    
+    //const user = useAuthStore((state) => state.user);
+    const updateFavorites = useAuthStore((state) => state.updateFavorites)
+
     const loginModal = useLoginModal();
-    const [hasFavorited, setHasFavorited] = useState<boolean>(false);
-
-    useEffect(() => {
-        setHasFavorited(
-            currentUser?.favorite_ids?.includes(listingId) ?? false
-        )
-    }, [currentUser, listingId])
-
+    /*
+    const hasFavorited = useMemo(() => {
+        return user?.favorite_ids?.includes(listingId) ?? false;
+    }, [user, listingId]);
+    */
+   
     const toggleFavorite = useCallback(async (e: React.MouseEvent<HTMLDivElement>) => {
         e.stopPropagation();
 
-        if (!currentUser) {
-            return loginModal.onOpen();
-        }
+        //if (!user) {
+        //    return loginModal.onOpen();
+        //}
+
+        const currentUser = useAuthStore.getState().user;
+        if (!currentUser) return loginModal.onOpen();
 
         const token = localStorage.getItem('token');
         try {
@@ -42,11 +50,10 @@ const useFavorite = ({ listingId, currentUser }: UseFavoriteProps) => {
                     // Manejo de errores si el backend devuelve un estado no exitoso
                     throw new Error("Error al eliminar favorito");
                 }   
-                const data = await response.json()
-                setHasFavorited(data.favorited); // 🔥 UI inmediata
+                updateFavorites(listingId, false)
             } else {
                 // POST
-                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/favorites/`, {
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/favorites/add/`, {
                     method: 'POST',
                     headers: {
                         Authorization: `Token ${token}`,
@@ -59,15 +66,15 @@ const useFavorite = ({ listingId, currentUser }: UseFavoriteProps) => {
                     // Manejo de errores si el backend devuelve un estado no exitoso  
                     throw new Error("Error al actualizar favorito");
                 }
-                const data = await response.json()
-                setHasFavorited(data.favorited); // 🔥 UI inmediata
+                updateFavorites(listingId, true)
             }
             toast.success('Correcto!');
+
         } catch (error) {
             console.error(error);
             toast.error('Algo fue mal!');
         }
-    },[currentUser, hasFavorited, listingId, loginModal]);
+    },[hasFavorited, listingId, loginModal, updateFavorites]); //user
 
     return {
         hasFavorited,

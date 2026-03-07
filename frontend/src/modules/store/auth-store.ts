@@ -8,6 +8,7 @@ interface AuthState {
     refreshUser: () => Promise<void>
     //login: (token: string) => Promise<void>
     logout: () => Promise<void>
+    updateFavorites: (listingId: string, favorited: boolean) => void
 }
 
 export const useAuthStore = create<AuthState>((set) => ({
@@ -42,6 +43,26 @@ export const useAuthStore = create<AuthState>((set) => ({
         await useAuthStore.getState().refreshUser()
     },
     */
+    updateFavorites: (listingId, favorited) =>
+        set((state) => {
+            if (!state.user) return state
+
+            let newFavorites = [...(state.user.favorite_ids || [])]
+
+            if (favorited) {
+                newFavorites.push(listingId)
+            } else {
+                newFavorites = newFavorites.filter((id) => id !== listingId)
+            }
+
+            return {
+                user: {
+                    ...state.user,
+                    favorite_ids: newFavorites,
+                },
+            }
+        }),
+
     logout: async () => {
         try {
             const token = localStorage.getItem("token")
