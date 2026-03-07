@@ -39,6 +39,24 @@ def remove_favorite(request, listing_id):
     return Response({"favorited": False}, status=status.HTTP_200_OK)
 
 
+
+@api_view(["DELETE"])
+@permission_classes([IsAuthenticated])
+def remove_properties(request, listing_id):
+    #solo puede borrar el usuario propietario con el id_listing correcto
+    user = request.user
+    deleted, _ = get_object_or_404(Listing, user=user, id=listing_id).delete()
+
+    if deleted == 0:
+        return Response(
+            {"error": "Reserva no encontrada o sin permiso"},
+            status=status.HTTP_404_NOT_FOUND
+        )
+
+    return Response({"message": "Propiedad borrada"}, status=status.HTTP_200_OK)
+
+
+
 @api_view(["DELETE"])
 @permission_classes([IsAuthenticated])
 def remove_reservation(request, reservation_id):
@@ -92,8 +110,13 @@ def list_reservations(request, listing_id=None, author_id=None, user_id=None):
 
 @api_view(["GET"])
 @permission_classes([AllowAny])
-def list_listing(request):
+def list_listing(request, user_id=None):
     listings = Listing.objects.all()
+
+    if user_id:
+        user = CustomUser.objects.get(id=user_id)
+        listings = Listing.objects.filter(user=user)
+
     serializer = Listingserializer(listings, many=True)
 
     return Response(serializer.data, status=status.HTTP_200_OK)

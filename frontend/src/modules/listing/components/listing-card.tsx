@@ -50,8 +50,7 @@ export const ListingCard = ({reservation, onAction, disabled, actionLabel, actio
 
         return `${format(start, 'PP')} - ${format(end, 'PP')}`
     }, [reservation])
-    console.log("----------------------")
-    console.log("render card:", data.id);
+
 
     return(
         <div 
