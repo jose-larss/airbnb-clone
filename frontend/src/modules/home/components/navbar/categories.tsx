@@ -7,7 +7,8 @@ import {FaSkiing} from "react-icons/fa";
 import {BsSnow} from "react-icons/bs";
 import {IoDiamond} from "react-icons/io5";
 import CategoryBox from "../category-box";
-import { usePathname, useSearchParams } from "next/navigation";
+import { useListingFilters } from "../../hooks/use-listing-filter";
+//import { usePathname, useSearchParams } from "next/navigation";
 
 
 export const categories = [
@@ -86,21 +87,27 @@ export const categories = [
         icon: IoDiamond,
         description: "Esta propiedad es lujosa",
     },
-]
+] as const
 
+export type Category = (typeof categories)[number]["label"]
 
 export const Categories = () => {
-    const params = useSearchParams();
-    const category = params.get("category");
-    const pathName = usePathname();
-    
+    const [{category}, setFilters] = useListingFilters()
+    //const params = useSearchParams();
+    //const category = params.get("category");
+    //const pathName = usePathname();
+    /*
     const isMainPage = pathName == '/'
     if (!isMainPage)  {
         return null
     }
+    */
+    const handleClick = (label: Category) => {
+        setFilters(prev => ({category: prev.category === label ? null : label}))
+    }
 
     return(
-        <div className="max-w-[2520px] mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
+        <div className="max-w-630 mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
             <div className="pt-4 flex flex-row items-center justify-between overflow-x-auto">
                 {categories.map((item) => (
                     <CategoryBox 
@@ -108,6 +115,7 @@ export const Categories = () => {
                         label={item.label}
                         icon={item.icon}
                         selected={category == item.label}
+                        onClick={() => handleClick(item.label)}
                     />
                 ))}
             </div>

@@ -38,6 +38,16 @@ export const FavoritesView = () => {
         fetchListings()
     }, [customUser])
 
+    if (!customUser) {
+        return (
+            <EmptyState
+                title="Sin autorización."
+                subTitle="Por favor, haz login."
+                showReset
+            />
+        )
+    }
+
     if (listings.length === 0) {
         return(
             <EmptyState

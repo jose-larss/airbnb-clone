@@ -3,12 +3,16 @@ import { Nunito } from "next/font/google";
 
 import "./globals.css";
 
+import { NuqsAdapter } from 'nuqs/adapters/next/app'
+
 import { Navbar } from "@/modules/home/components/navbar/navbar";
 import { RegisterModal } from "@/modules/auth/components/register-modal";
 import { Toaster } from "@/components/ui/sonner";
 import { LoginModal } from "@/modules/auth/components/login-modal";
 import ClientAuthInit from "@/modules/auth/provider/client-auth-init";
 import { RentModal } from "@/modules/listing/components/modal/rent-modal";
+import { SearchModal } from "@/modules/home/modal/search-modal";
+
 
 
 const nunito = Nunito({
@@ -26,31 +30,32 @@ export default async function RootLayout({children,}: Readonly<{
   return (
     <html lang="es">
         <body className={nunito.className}>
-            <Toaster
-                position="top-right"      // posición global por defecto
-                richColors                 // usa colores automáticos según tipo
-                toastOptions={
-                    {
-                        duration: 4000,
-                        style: {
-                            fontSize: "18px",
-                            padding: "12px 20px",
-                            maxWidth: "350px",
-                        },
+            <NuqsAdapter>
+                <Toaster
+                    position="top-right"      // posición global por defecto
+                    richColors                 // usa colores automáticos según tipo
+                    toastOptions={
+                        {
+                            duration: 4000,
+                            style: {
+                                fontSize: "18px",
+                                padding: "12px 20px",
+                                maxWidth: "350px",
+                            },
+                        }
                     }
-                }
-            />
-            <RentModal/>
-            <LoginModal />
-            <RegisterModal/>
-            <Navbar/>
-            <div className="pt-24">
-                
-                <ClientAuthInit/>
-                
-                    {children}
-                
-            </div>
+                />
+                <SearchModal />
+                <RentModal/>
+                <LoginModal />
+                <RegisterModal/>
+                <Navbar/>
+                <div className="pt-24">
+                    
+                    <ClientAuthInit/>
+                        {children}
+                </div>
+            </NuqsAdapter>
         </body>
     </html>
   );

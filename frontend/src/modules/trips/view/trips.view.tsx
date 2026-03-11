@@ -5,14 +5,19 @@ import { ReservationType } from "@/modules/listing/types"
 import { useAuthStore } from "@/modules/store/auth-store"
 import { useEffect, useState } from "react"
 import { TripsListing } from "../components/trips-listing"
+import { useRouter } from "next/navigation"
+import useLoginModal from "@/modules/auth/hooks/useLoginModal"
 
 export const TripsView = () => {
+    const router = useRouter()
+    const loginModal = useLoginModal()
+
     const customUser = useAuthStore(state => state.user)
     const [reservations, setReservations] = useState<ReservationType[]>([])
 
     useEffect(() => {
         if (!customUser) return
-
+        
         const fetchReservations = async () => {
             try {
                 const token = localStorage.getItem("token")
@@ -37,8 +42,8 @@ export const TripsView = () => {
         }
 
         fetchReservations()
-    }, [customUser])
-
+    }, [customUser, loginModal])
+    
     if (!customUser) {
         return (
             <EmptyState
@@ -48,7 +53,7 @@ export const TripsView = () => {
             />
         )
     }
-
+    
     if (reservations.length === 0) {
         return (
             <EmptyState
@@ -62,7 +67,7 @@ export const TripsView = () => {
     return (
         <TripsListing 
             reservations={reservations}
-            currenUser={customUser}
+            currentUser={customUser}
         />
     )
 }

@@ -9,10 +9,10 @@ import { toast } from "sonner";
 
 interface ReservationsListingProps {
     reservations: ReservationType[]
-    currenUser: UserType | null
+    currentUser: UserType | null
 }
 
-export const ReservationsListing = ({reservations, currenUser}: ReservationsListingProps) => {
+export const ReservationsListing = ({reservations, currentUser}: ReservationsListingProps) => {
     const router = useRouter()
 
     const [deletingId, setDeletingId] = useState("")
@@ -49,14 +49,14 @@ export const ReservationsListing = ({reservations, currenUser}: ReservationsList
     }, [router])
 
     return(
-        <div className="max-w-630 mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
+        <div className="max-w-630 mx-auto xl:px-20 md:px-10 sm:px-2 px-4 mt-28">
             <div className={"text-start"}>
                 <div className="text-2xl font-bold">
                     Reservas
                 </div>
 
                 <div className="font-light text-neutral-500 mt-2">
-                    Reservas en sus propiedades
+                    Reservas realizadas en mis propias propiedades
                 </div>
             </div>
             <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-8">
@@ -69,7 +69,7 @@ export const ReservationsListing = ({reservations, currenUser}: ReservationsList
                         actionLabel="Cancelar reservas de invitados"
                         actionId={reservation.id}
                         data={reservation?.listing}
-                        currentUser={currenUser}
+                        currentUser={currentUser}
                     />
                 ))}
             </div>

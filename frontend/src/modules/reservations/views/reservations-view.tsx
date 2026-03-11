@@ -60,7 +60,7 @@ export const ReservationView = () => {
     return(
         <ReservationsListing 
             reservations={reservations}
-            currenUser={customUser}
+            currentUser={customUser}
         />
     )
 }

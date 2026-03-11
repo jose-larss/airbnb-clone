@@ -4,7 +4,7 @@ import Select, { SingleValue } from "react-select";
 import useCountries, { CountryType } from "../../hooks/useCountries";
 
 interface CountrySelectProps {
-    value: CountryType | null;
+    value: CountryType | null | undefined;
     onChange: (value: CountryType | null) => void;
 }
 
