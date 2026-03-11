@@ -1,4 +1,7 @@
+from datetime import datetime
 from django.db.models import Q
+
+from django.utils.dateparse import parse_datetime
 
 from rest_framework import status
 from rest_framework.generics import get_object_or_404
@@ -111,11 +114,43 @@ def list_reservations(request, listing_id=None, author_id=None, user_id=None):
 @api_view(["GET"])
 @permission_classes([AllowAny])
 def list_listing(request, user_id=None):
+    guest = request.query_params.get("guest")
+    rooms = request.query_params.get("rooms")
+    bathrooms = request.query_params.get("bathrooms")
+    category = request.query_params.get("category")
+    city = request.query_params.get("city")
+    startDate = request.query_params.get("startDate")
+    endDate = request.query_params.get("endDate")
+
     listings = Listing.objects.all()
 
     if user_id:
         user = CustomUser.objects.get(id=user_id)
         listings = Listing.objects.filter(user=user)
+
+    if guest is not None:
+        listings = listings.filter(guest_count__gte=int(guest))
+
+    if rooms is not None:
+        listings = listings.filter(room_count__gte=int(rooms))
+
+    if bathrooms is not None:
+        listings = listings.filter(bathroom_count__gte=int(bathrooms))
+
+    if category is not None:
+        listings = listings.filter(category=category)
+
+    if city is not None:
+        listings = listings.filter(location_value=city)
+
+    if startDate is not None and endDate is not None:
+        startDate = parse_datetime(startDate)
+        endDate = parse_datetime(endDate)
+
+        listings = listings.exclude(
+            reservation_listing__start_date__lte=endDate,
+            reservation_listing__end_date__gte=startDate
+        )
 
     serializer = Listingserializer(listings, many=True)
 

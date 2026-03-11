@@ -30,6 +30,7 @@ export const EmptyState = ({
             <div className="w-48 mt-4">
                 {showReset && (
                     <Button 
+                        className="cursor-pointer"
                         onClick={() => router.push('/')}
                         variant={"airBnbOutline"}
                         size={"lg"}

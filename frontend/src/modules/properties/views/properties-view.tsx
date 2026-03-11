@@ -38,6 +38,16 @@ export const PropertiesView = () => {
         fetchProperties()
     }, [customUser])
 
+    if (!customUser) {
+        return (
+            <EmptyState
+                title="Sin autorización."
+                subTitle="Por favor, haz login."
+                showReset
+            />
+        )
+    }
+
     if (properties.length === 0) {
         return(
             <EmptyState

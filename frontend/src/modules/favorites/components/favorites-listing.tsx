@@ -11,7 +11,7 @@ interface FavoritesListingProps {
 
 export const FavoritesListing = ({currentUser, listings}: FavoritesListingProps) => {
     return(
-        <div className="max-w-630 mx-auto xl:px-20 md:px-10 sm:px-2 px-4">
+        <div className="max-w-630 mx-auto xl:px-20 md:px-10 sm:px-2 px-4 mt-28">
             <div className={"text-start"}>
                 <div className="text-2xl font-bold">
                     Favoritos
